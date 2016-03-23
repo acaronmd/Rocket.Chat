@@ -212,6 +212,13 @@ RocketChat.models.Users = new class extends RocketChat.models._Base
 
 		return @update _id, update
 
+	setUserMessage: (_id, message) ->
+		update =
+			$set:
+				statusMessage: message
+
+		return @update _id, update
+
 	setAllUsersActive: (active) ->
 		update =
 			$set:

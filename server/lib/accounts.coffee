@@ -49,6 +49,7 @@ Accounts.onCreateUser (options, user) ->
 	RocketChat.callbacks.run 'beforeCreateUser', options, user
 
 	user.status = 'offline'
+	user.statusMessage = ''
 	user.active = not RocketChat.settings.get 'Accounts_ManuallyApproveNewUsers'
 
 	if not user?.name? or user.name is ''

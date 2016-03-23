@@ -2,6 +2,7 @@ Template.accountBox.helpers
 	myUserInfo: ->
 		visualStatus = "online"
 		username = Meteor.user()?.username
+		statusMessage = Meteor.user().statusMessage
 		switch Session.get('user_' + username + '_status')
 			when "away"
 				visualStatus = t("away")
@@ -15,6 +16,7 @@ Template.accountBox.helpers
 			visualStatus: visualStatus
 			_id: Meteor.userId()
 			username: username
+			statusMessage: statusMessage
 		}
 
 	showAdminOption: ->
@@ -27,6 +29,25 @@ Template.accountBox.events
 	'click .options .status': (event) ->
 		event.preventDefault()
 		AccountBox.setStatus(event.currentTarget.dataset.status)
+		swal
+			title: 'Set Custom Status'
+			text: 'Enter a custom status'
+			type: "input"
+			confirmButtonText: 'Set Status'
+			cancelButtonText: 'No Custom Status'
+			showCancelButton: true
+			closeOnConfirm: false
+			closeOnCancel: false
+		, (statusMessage) =>
+			Meteor.call('updateUserStatusMessage', statusMessage)
+			if statusMessage is false
+				swal
+					title: 'No Custom Status'
+					confirmButtonText: 'OK'
+			else
+				swal
+					title: statusMessage
+					confirmButtonText: 'OK'
 
 	'click .account-box': (event) ->
 		AccountBox.toggle()

@@ -34,20 +34,9 @@ Template.accountBox.events
 			text: 'Enter a custom status'
 			type: "input"
 			confirmButtonText: 'Set Status'
-			cancelButtonText: 'No Custom Status'
-			showCancelButton: true
-			closeOnConfirm: false
-			closeOnCancel: false
+			closeOnConfirm: true
 		, (statusMessage) =>
 			Meteor.call('updateUserStatusMessage', statusMessage)
-			if statusMessage is false
-				swal
-					title: 'No Custom Status'
-					confirmButtonText: 'OK'
-			else
-				swal
-					title: statusMessage
-					confirmButtonText: 'OK'
 
 	'click .account-box': (event) ->
 		AccountBox.toggle()

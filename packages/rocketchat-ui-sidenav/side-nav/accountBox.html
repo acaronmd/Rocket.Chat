@@ -8,7 +8,13 @@
 					</div>
 					<div class="data">
 						<h4>{{username}}</h4>
-						<h6>{{statusMessage}}</h6>
+					</div>
+					<div class="data">
+						{{#if statusMessage}}
+							<h6>{{statusMessage}}</h6>
+						{{else}}
+							<h6>{{visualStatus}}</h6>
+						{{/if}}
 					</div>
 				{{/if}}
 			</div>

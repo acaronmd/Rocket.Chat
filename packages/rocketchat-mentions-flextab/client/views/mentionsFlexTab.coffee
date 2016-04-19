@@ -15,8 +15,7 @@ Template.mentionsFlexTab.onCreated ->
 	@hasMore = new ReactiveVar true
 	@limit = new ReactiveVar 50
 	@autorun =>
-		sub = @subscribe 'mentionedMessages', @data.rid, @limit.get()
-		if sub.ready()
+		@subscribe 'mentionedMessages', @data.rid, @limit.get(), =>
 			if MentionedMessage.find({ rid: @data.rid }).count() < @limit.get()
 				@hasMore.set false
 
@@ -28,13 +27,13 @@ Template.mentionsFlexTab.events
 		$('.message-dropdown:visible').hide()
 		$(".mentioned-messages-list \##{message_id} .message-dropdown").remove()
 		message = MentionedMessage.findOne message_id
-		actions = RocketChat.MessageAction.getButtons message
+		actions = RocketChat.MessageAction.getButtons message, 'mentions'
 		el = Blaze.toHTMLWithData Template.messageDropdown, { actions: actions }
 		$(".mentioned-messages-list \##{message_id} .message-cog-container").append el
 		dropDown = $(".mentioned-messages-list \##{message_id} .message-dropdown")
 		dropDown.show()
 
 	'scroll .content': _.throttle (e, instance) ->
-		if e.target.scrollTop >= e.target.scrollHeight - e.target.clientHeight
+		if e.target.scrollTop >= e.target.scrollHeight - e.target.clientHeight && instance.hasMore.get()
 			instance.limit.set(instance.limit.get() + 50)
 	, 200

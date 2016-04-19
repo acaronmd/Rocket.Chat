@@ -1,5 +1,5 @@
 Meteor.methods
-	'authorization:removeUserFromRole': (roleName, username) ->
+	'authorization:removeUserFromRole': (roleName, username, scope) ->
 		if not Meteor.userId() or not RocketChat.authz.hasPermission Meteor.userId(), 'access-permissions'
 			throw new Meteor.Error "not-authorized"
 
@@ -11,4 +11,6 @@ Meteor.methods
 		if not user?._id?
 			throw new Meteor.Error 'user-not-found'
 
-		return RocketChat.models.Roles.removeUserRoles user._id, roleName
+		RocketChat.Notifications.notifyAll('roles-change', { type: 'removed', _id: roleName, u: { _id: user._id, username: username }, scope: scope });
+
+		return RocketChat.models.Roles.removeUserRoles user._id, roleName, scope

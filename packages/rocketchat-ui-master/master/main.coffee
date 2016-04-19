@@ -1,8 +1,8 @@
 Template.body.onRendered ->
-	new Clipboard('.clipboard')
+	clipboard = new Clipboard('.clipboard')
 
 	$(document.body).on 'keydown', (e) ->
-		if e.keyCode is 80 and (e.ctrlKey is true or e.metaKey is true)
+		if e.keyCode is 80 and (e.ctrlKey is true or e.metaKey is true) and e.shiftKey is false
 			e.preventDefault()
 			e.stopPropagation()
 			spotlight.show()
@@ -234,4 +234,10 @@ Template.main.onRendered ->
 	else
 		$('html').removeClass "rtl"
 
-	$('.page-loading').remove()
+	$('#initial-page-loading').remove()
+
+	window.addEventListener 'focus', ->
+		Meteor.setTimeout ->
+			if not $(':focus').is('INPUT,TEXTAREA')
+				$('.input-message').focus()
+		, 100

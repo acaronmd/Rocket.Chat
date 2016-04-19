@@ -45,9 +45,8 @@ Meteor.methods
 
 
 configurePush = ->
-	console.log 'configuring push'
-
-	Push.debug = RocketChat.settings.get 'Push_debug'
+	if RocketChat.settings.get 'Push_debug'
+		console.log 'Push: configuring...'
 
 	if RocketChat.settings.get('Push_enable') is true
 		Push.allow
@@ -74,6 +73,12 @@ configurePush = ->
 					certData: RocketChat.settings.get 'Push_apn_dev_cert'
 					gateway: 'gateway.sandbox.push.apple.com'
 
+			if not apn.keyData? or apn.keyData.trim() is '' or not apn.keyData? or apn.keyData.trim() is ''
+				apn = undefined
+
+			if not gcm.apiKey? or gcm.apiKey.trim() is '' or not gcm.projectNumber? or gcm.projectNumber.trim() is ''
+				gcm = undefined
+
 		Push.Configure
 			apn: apn
 			gcm: gcm
@@ -95,8 +100,8 @@ configurePush = ->
 				if options.text isnt ''+options.text
 					throw new Error('Push.send: option "text" not a string')
 
-				if Push.debug
-					console.log('Push: Send message "' + options.title + '" via query', options.query)
+				if RocketChat.settings.get 'Push_debug'
+					console.log('Push: send message "' + options.title + '" via query', options.query)
 
 				query =
 					$and: [
@@ -110,8 +115,8 @@ configurePush = ->
 					]
 
 				Push.appCollection.find(query).forEach (app) ->
-					if Push.debug
-						console.log('send to token', app.token)
+					if RocketChat.settings.get 'Push_debug'
+						console.log('Push: send to token', app.token)
 
 					if app.token.apn?
 						service = 'apn'

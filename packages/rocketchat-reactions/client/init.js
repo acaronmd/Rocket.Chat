@@ -33,8 +33,14 @@ Meteor.startup(function() {
 		id: 'reaction-message',
 		icon: 'icon-people-plus',
 		i18nLabel: 'Reactions',
+		context: [
+			'message',
+			'message-mobile'
+		],
 		action(event) {
 			const data = Blaze.getData(event.currentTarget);
+
+			event.stopPropagation();
 
 			RocketChat.EmojiPicker.open(event.currentTarget, (emoji) => {
 				Meteor.call('setReaction', ':' + emoji + ':', data._arguments[1]._id);
@@ -43,6 +49,6 @@ Meteor.startup(function() {
 		validation() {
 			return true;
 		},
-		order: 11
+		order: 22
 	});
 });

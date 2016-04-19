@@ -3,15 +3,29 @@
  * @param {string} token - Visitor token
  */
 RocketChat.models.Rooms.updateSurveyFeedbackById = function(_id, surveyFeedback) {
-	query = {
+	const query = {
 		_id: _id
 	};
 
-	update = {
+	const update = {
 		$set: {
 			surveyFeedback: surveyFeedback
 		}
 	};
 
 	return this.update(query, update);
+};
+
+RocketChat.models.Rooms.updateLivechatDataByToken = function(token, key, value) {
+	const query = {
+		'v.token': token
+	};
+
+	const update = {
+		$set: {
+			[`livechatData.${key}`]: value
+		}
+	};
+
+	return this.upsert(query, update);
 };

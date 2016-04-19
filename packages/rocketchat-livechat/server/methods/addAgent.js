@@ -1,7 +1,7 @@
 Meteor.methods({
 	'livechat:addAgent' (username) {
 		if (!Meteor.userId() || !RocketChat.authz.hasPermission(Meteor.userId(), 'view-livechat-manager')) {
-			throw new Meteor.Error("not-authorized");
+			throw new Meteor.Error('not-authorized');
 		}
 
 		if (!username || !_.isString(username)) {
@@ -15,7 +15,9 @@ Meteor.methods({
 		}
 
 		if (RocketChat.authz.addUserRoles(user._id, 'livechat-agent')) {
-			return RocketChat.models.Users.setOperator(user._id, true);
+			RocketChat.models.Users.setOperator(user._id, true);
+			RocketChat.models.Users.setLivechatStatus(user._id, 'available');
+			return true;
 		}
 
 		return false;

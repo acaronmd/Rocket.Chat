@@ -1,5 +1,182 @@
 ## NEXT
 
+## 0.27.0, 2016-Apr-18
+
+- Add admin to default list of allowed roles on 'pin-message' (#2846)
+- Add date/time format settings (#2852)
+- Always set a base URL
+- Auto-translate all languages (#2927)
+- Close #1319 #2701 Add permalink to messages (#2870)
+- Close #2378 Add role tags (#2858)
+- Close #2708 Remove user's avatar from filesystem when deleting the user (#2853)
+- Close #2746 Prevent server crash on wrong S3 configuration (#2851)
+- Close #2829 Add setting for blocking message exclusion (#2933)
+- Close #2887 Support for GET method in @integrations (#2932)
+- Custom OAuth fixes for Reddit (#2921)
+- Do not reset pin-message permission roles on server restart (#2919)
+- Do not set ROOT_URL_PATH_PREFIX based on Site_URL
+- Fix checking room roles
+- Fix error when incoming integration returns nothing
+- Fix for email verification check alignment (RTL) (#2855)
+- Fix for role name being reset on server restart
+- Fix oauth payload method (#2915)
+- Improved message input layout
+- Remove empty link hrefs
+- Remove whitespace around blockquote in message (#2883)
+- Replace arunoda:streams by rocketchat:streamer (#2842)
+- Set pin-message permissions only on insert
+- Several UI improvements
+- Simplify and fix ADMIN_EMAIL verification regex. Fixes RocketChat/Rocket.Chat#2841 (#2890)
+- Trim leading & trailing spaces on username or email at the login form (#2871)
+- Trim username and e-mail in login/registration form (#2888)
+- UI improvements to mentions popup (#2864)
+- Update Vagrantfile. (#2936)
+- Use different color for mentions "all" (#2865)
+- User info tab bar improvements (#2893)
+
+## 0.26.0, 2016-Apr-11
+
+- Add a download icon to file list (#2817)
+- Add ability to hide embedded media
+- Add checks to removeRoomOwner to deny removing last owner
+- Add Livechat custom fields (#2840)
+- Add New status for livechat agents (#2821)
+- Add option on custom oauth to send access token in headers or in payload (#2818)
+- Add pin-message permission to users when public pinning was allowed
+- Add scope option to create roles
+- Allow creating new roles with room scope and add/remove users to role
+- Change add-user permission to create-user permission, to avoid mistakes with add-user-to-room permission (to be created)
+- Clear stream read permission cache on subscribe
+- Clicking outside the message actions box closes it
+- Close #2656 Add schemes settings for Markdown links (#2794)
+- Close #2656 Markdown Headers do not work
+- Close #2696 RocketChat hijacking Firefox shortcut
+- Close #2744 Add a description with warning text for Force_SSL
+- Create archive and unarchive room permissions
+- Create new model method insertOrUpsert based on _id
+- Create permission to add user to room
+- Disable auto-linking inside Katex
+- Do not set DDP_DEFAULT_CONNECTION_URL
+- Feature to add maximum channel members for an @all message to send notifications (#2826)
+- Fix #2743 loadSurroundingMessages' TypeError: Cannot set property
+- Fix #2751 When no password is set (logged in via oauth), don't ask for password when saving profile and ask for username when deleting account
+- Fix menu touch/move and audio touch
+- Fix migration 36 (assets) using a new migration 42
+- Hide livechat users and rooms from the admin pages (#2820)
+- Replace Autolinker.js and add AutoLinker settings
+- Update archive and unarchive room permissions
+- Update emojione to 2.1.4
+- Update fontello from livechat app
+- Update bash shebang on shell scripts for portability
+- Use insertOrUpsert for new messages in Messages model
+- Use new error format
+- Use RocketChat Logger as SyncedCron logger
+- When creating a room, set user only as owner, not moderator
+
+## 0.25.0, 2016-Apr-04
+
+- Add black list email list options
+- Add more indexes to users collection
+- Add request size limit
+- Add support for 1Password in iOS mobile app >= 2.2.4
+- Add support to social share in mobile apps
+- Better visual for highlighting
+- CanAddUser update to use owner and moderator roles instead of creator for adding users to a channel or private group
+- Close #2666; Add a back button
+- Close #2685; Jump to first unread message doesn't work
+- Create migration for Layout_Login_Header
+- Display error from leaveRoom method
+- Do not redirect assets, pass to static files middleware
+- Expose Assets methods via RocketChat.Assets
+- Fix #1194 OEmbed http requests use "request" npm package instead of official node modules.
+- Fix #2565 Don't let the last owner leave the room. Warn user.
+- Fix #2634 Admins are warned if they have not verified their e-mail and e-mail verification is true.
+- Fix #2659 security issue with required password change.
+- Fix #2687 as per vetash suggestion.
+- Fix #2697 "Create" vs "Save" button when creating a direct message room
+- Fix #2698 When creating a DM room, Enter should submit the form
+- Fix #2712 Logo on bottom left hand corner is missing icons
+- Fix accidental opening of links in mobile
+- Fix default sorting on channels list
+- Fix editing users in admin
+- Fix emoji character overlaping image on RTL
+- Fix incorrect url to supply for oAuth providers
+- Fix Oauth for django oauth toolkit
+- Fix ROOT_URL_PATH_PREFIX and add tab base
+- Fix text selection for cordova
+- Fix to package file/versions: - Do not depend on specific version of ostrio:cookies to use newer versions with fixes - Update all packages with latest versions
+- Improve the unread mark calculator 
+- Misc fixes to allow running from subdirectory rather than root (/)
+- Move i18n files to inside the lib package
+- Prevent to open message menu for long press in links on mobile
+- Reject embed if URL is not http scheme
+- Removed condition that hides "User left message" in channels
+- Serve assets with extensions
+- Set _updateAt when updating setting
+- Show loading while loading initial subscriptions
+- Show URL attributes after applying Handlebars.SafeString
+- Use absoluteUrl instead of location.origin so ROOT_URL is taken into account
+- Use native action sheet for message actions in mobile
+- Use page-loading animation when waiting subs
+- Use ReadOnly globals
+
+## 0.24.0, 2016-Mar-28
+
+- Add a title with emoji's shortname on picker
+- Add Assets and Blaze to jshint global variables
+- Add button to download uploaded files
+- Add button to verify email address
+- Add description and params to slashcommand "me"
+- Add index for Messages pinned, Messages u._id, Subscription emailNotifications, Subscription rid, alert, u._id, Subscription rid, roles, to Subscriptions ls, to Users name, Users lastLogin, Users status, Subscriptions, mobilePushNotifications and desktopNotifications
+- Add Reactions translation
+- Add RTL switch to fontello demo page
+- Add Support for block quote
+- Add titles for emoji categories
+- Add UI for reactions
+- Close #2394; Add tab-i18n to list of allowed URLs in CORS
+- Count unreads of the opened room too
+- Debounce calls of codemirror changed
+- Do not hide navigation bar of swipebox
+- Do not override value of record on input blur
+- Emoji picker now receives a callback
+- Expose emoji picker in RocketChat namespace
+- Fix #2615; Bad Uri generation for Gitlab Oauth profile
+- Fix emoji popup using emojione's template to render emojis
+- Fix error when push gateways is active
+- Fix error with asset upload in Firefox
+- Fix flex-nav show/hide animation on RTL
+- Fix for word highlighting of none Latin characters
+- Fix full screen of code editor for new incoming integrations
+- Fix problem with ddp connection from some urls
+- Fix RTL icon issues
+- Fix set user's name on creation
+- Fix sound of new room
+- Fix url for the logo asset
+- Focus the message input on window focus
+- Get room data on sendMessage if room is incomplete
+- Improve subscription filteredUsers
+- Improve tooltip positioning
+- Improve verification of new user as admin or user
+- More channels shows all channels by default
+- New default hover message background color
+- New emoji font characters
+- New reactions package
+- New tooltip lib
+- Only compile scripts if scripts are enabled and filled
+- Prevent to use APN with empty certs
+- Recompile LESS files on each addPackageAsset call
+- Remove all references to octicons
+- Remove CW and CCW icons from mirror map
+- Try to be smarter when suggesting usernames
+- Unblock call to avatar suggestion
+- Unlock methods 'joinDefaultChannels' and 'leaveRoom'
+- Update ClipboardJS to version 1.5.9
+- Update fontello with GitHub Octicons
+- Use Emojione's sprites
+- Use new tooptip lib for reactions
+- Use the login layout for the reset password screen
+- Using PNG emoji sprites for better performance
+
 ## 0.23.0, 2016-Mar-21
 
 - Accept * for all media types

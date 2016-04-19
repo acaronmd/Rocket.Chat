@@ -1,18 +1,19 @@
+/* globals openRoom */
+
 RocketChat.roomTypes.add('l', 5, {
 	template: 'livechat',
 	icon: 'icon-chat-empty',
 	route: {
 		name: 'live',
 		path: '/live/:name',
-		action: (params, queryParams) => {
-			Session.set('showUserInfo');
+		action: (params/*, queryParams*/) => {
 			openRoom('l', params.name);
 			RocketChat.TabBar.showGroup('livechat', 'search');
 		},
 		link: (sub) => {
 			return {
 				name: sub.name
-			}
+			};
 		}
 	},
 	condition: () => {
@@ -34,7 +35,7 @@ RocketChat.TabBar.addButton({
 	groups: ['livechat'],
 	id: 'visitor-info',
 	i18nTitle: 'Visitor_Info',
-	icon: 'octicon octicon-info',
+	icon: 'icon-info',
 	template: 'visitorInfo',
 	order: 0
 });

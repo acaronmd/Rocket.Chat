@@ -1,5 +1,7 @@
+/* globals Inject */
+
 Inject.rawBody('page-loading', `
-	<div class="page-loading">
+	<div id="initial-page-loading" class="page-loading">
 		<div class="spinner">
 			<div class="rect1"></div>
 			<div class="rect2"></div>
@@ -7,4 +9,20 @@ Inject.rawBody('page-loading', `
 			<div class="rect4"></div>
 			<div class="rect5"></div>
 		</div>
-	</div>`);
+	</div>`
+);
+
+RocketChat.settings.get('Site_Url', function() {
+	Meteor.defer(function() {
+		let baseUrl;
+		if (__meteor_runtime_config__.ROOT_URL_PATH_PREFIX && __meteor_runtime_config__.ROOT_URL_PATH_PREFIX.trim() !== '') {
+			baseUrl = __meteor_runtime_config__.ROOT_URL_PATH_PREFIX;
+		} else {
+			baseUrl = '/';
+		}
+		if(/\/$/.test(baseUrl) === false) {
+			baseUrl += '/';
+		}
+		Inject.rawHead('base', `<base href="${baseUrl}">`);
+	});
+});

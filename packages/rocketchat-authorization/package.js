@@ -9,10 +9,11 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.0');
   api.use([
+    'ecmascript',
     'coffeescript',
     'underscore',
     'rocketchat:lib'
-    ]);
+  ]);
 
   api.use('mongo', ['client', 'server']);
   api.use('kadira:flow-router', 'client');
@@ -22,6 +23,7 @@ Package.onUse(function(api) {
   api.use('templating', 'client');
 
   api.addFiles('lib/rocketchat.coffee', ['server','client']);
+
   api.addFiles('client/lib/ChatPermissions.coffee', ['client']);
   api.addFiles('client/lib/models/Roles.coffee', ['client']);
   api.addFiles('client/lib/models/Users.js', ['client']);
@@ -70,14 +72,4 @@ Package.onUse(function(api) {
   api.addFiles('server/methods/removeRoleFromPermission.coffee', 'server');
 
   api.addFiles('server/startup.coffee', ['server']);
-
-  var _ = Npm.require('underscore');
-  var fs = Npm.require('fs');
-  tapi18nFiles = _.compact(_.map(fs.readdirSync('packages/rocketchat-authorization/i18n'), function(filename) {
-    if (fs.statSync('packages/rocketchat-authorization/i18n/' + filename).size > 16) {
-      return 'i18n/' + filename;
-    }
-  }));
-  api.use('tap:i18n');
-  api.addFiles(tapi18nFiles);
 });

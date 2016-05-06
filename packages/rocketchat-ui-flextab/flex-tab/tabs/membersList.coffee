@@ -28,9 +28,15 @@ Template.membersList.helpers
 
 					utcOffset = "(UTC #{utcOffset})"
 
+				statusMessage = onlineUsers[username]?.statusMessage
+				if statusMessage?
+					if statusMessage != ""
+						statusMessage = "- #{statusMessage}"
+
 				users.push
 					username: username
 					status: onlineUsers[username]?.status
+					statusMessage: statusMessage
 					utcOffset: utcOffset
 
 		users = _.sortBy users, 'username'

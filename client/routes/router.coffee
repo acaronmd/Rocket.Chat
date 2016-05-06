@@ -75,6 +75,13 @@ FlowRouter.route '/history/private',
 		RocketChat.TabBar.showGroup 'private-history'
 		BlazeLayout.render 'main', {center: 'privateHistory'}
 
+FlowRouter.route '/inOutBoard',
+	name: 'inOutBoard'
+
+	action: ->
+		Session.setDefault('historyFilter', '')
+		RocketChat.TabBar.showGroup 'private-history'
+		BlazeLayout.render 'main', {center: 'inOutBoard'}
 
 FlowRouter.route '/terms-of-service',
 	name: 'terms-of-service'

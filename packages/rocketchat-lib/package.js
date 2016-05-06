@@ -5,6 +5,10 @@ Package.describe({
 	git: ''
 });
 
+Npm.depends({
+	'bad-words': '1.3.1'
+});
+
 Package.onUse(function(api) {
 	api.versionsFrom('1.0');
 
@@ -41,6 +45,7 @@ Package.onUse(function(api) {
 	api.addFiles('lib/configLogger.coffee');
 	api.addFiles('lib/callbacks.coffee');
 	api.addFiles('lib/fileUploadRestrictions.js');
+	api.addFiles('lib/placeholders.js');
 	api.addFiles('lib/promises.coffee');
 	api.addFiles('lib/slashCommand.coffee');
 	api.addFiles('lib/Message.coffee');
@@ -97,6 +102,7 @@ Package.onUse(function(api) {
 	api.addFiles('server/methods/insertOrUpdateUser.coffee', 'server');
 	api.addFiles('server/methods/setEmail.js', 'server');
 	api.addFiles('server/methods/restartServer.coffee', 'server');
+	api.addFiles('server/methods/filterBadWords.js', ['server']);
 
 	// SERVER STARTUP
 	api.addFiles('server/startup/settingsOnLoadCdnPrefix.coffee', 'server');
@@ -146,6 +152,8 @@ Package.onUse(function(api) {
 	api.use('tap:i18n');
 	api.imply('tap:i18n');
 });
+
+
 
 Package.onTest(function(api) {
 	api.use('coffeescript');

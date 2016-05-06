@@ -5,15 +5,9 @@ isSubscribed = (_id) ->
 	return ChatSubscription.find({ rid: _id }).count() > 0
 
 favoritesEnabled = ->
-	return !RocketChat.settings.get 'Disable_Favorite_Rooms'
+	return RocketChat.settings.get 'Favorite_Rooms'
 
 Template.room.helpers
-	# showFormattingTips: ->
-	# 	return RocketChat.settings.get('Message_ShowFormattingTips') and (RocketChat.Markdown or RocketChat.Highlight)
-	# showMarkdown: ->
-	# 	return RocketChat.Markdown
-	# showHighlight: ->
-	# 	return RocketChat.Highlight
 	favorite: ->
 		sub = ChatSubscription.findOne { rid: this._id }, { fields: { f: 1 } }
 		return 'icon-star favorite-room' if sub?.f? and sub.f and favoritesEnabled
@@ -45,39 +39,11 @@ Template.room.helpers
 	uploading: ->
 		return Session.get 'uploading'
 
-	# usersTyping: ->
-	# 	users = MsgTyping.get @_id
-	# 	if users.length is 0
-	# 		return
-	# 	if users.length is 1
-	# 		return {
-	# 			multi: false
-	# 			selfTyping: MsgTyping.selfTyping.get()
-	# 			users: users[0]
-	# 		}
-
-	# 	# usernames = _.map messages, (message) -> return message.u.username
-
-	# 	last = users.pop()
-	# 	if users.length > 4
-	# 		last = t('others')
-	# 	# else
-	# 	usernames = users.join(', ')
-	# 	usernames = [usernames, last]
-	# 	return {
-	# 		multi: true
-	# 		selfTyping: MsgTyping.selfTyping.get()
-	# 		users: usernames.join " #{t 'and'} "
-	# 	}
-
 	roomName: ->
 		roomData = Session.get('roomData' + this._id)
 		return '' unless roomData
 
-		if roomData.t is 'd'
-			return ChatSubscription.findOne({ rid: this._id }, { fields: { name: 1 } })?.name
-		else
-			return roomData.name
+		return RocketChat.roomTypes.getRoomName roomData?.t, roomData
 
 	roomTopic: ->
 		roomData = Session.get('roomData' + this._id)
@@ -88,10 +54,7 @@ Template.room.helpers
 		roomData = Session.get('roomData' + this._id)
 		return '' unless roomData?.t
 
-		switch roomData.t
-			when 'd' then return 'icon-at'
-			when 'c' then return 'icon-hash'
-			when 'p' then return 'icon-lock'
+		return RocketChat.roomTypes.getIcon roomData?.t
 
 	userStatus: ->
 		roomData = Session.get('roomData' + this._id)
@@ -105,65 +68,11 @@ Template.room.helpers
 		else
 			return 'offline'
 
-	isChannel: ->
-		roomData = Session.get('roomData' + this._id)
-		return '' unless roomData
-		return roomData.t is 'c'
-
-	canDirectMessage: ->
-		return Meteor.user()?.username isnt this.username
-
 	flexOpened: ->
 		return 'opened' if RocketChat.TabBar.isFlexOpen()
 
-	arrowPosition: ->
-		return 'left' unless RocketChat.TabBar.isFlexOpen()
-
-	phoneNumber: ->
-		return '' unless this.phoneNumber
-		if this.phoneNumber.length > 10
-			return "(#{this.phoneNumber.substr(0,2)}) #{this.phoneNumber.substr(2,5)}-#{this.phoneNumber.substr(7)}"
-		else
-			return "(#{this.phoneNumber.substr(0,2)}) #{this.phoneNumber.substr(2,4)}-#{this.phoneNumber.substr(6)}"
-
-	userActiveByUsername: (username) ->
-		status = Session.get 'user_' + username + '_status'
-		if status in ['online', 'away', 'busy']
-			return {username: username, status: status}
-		return
-
-	getPopupConfig: ->
-		template = Template.instance()
-		return {
-			getInput: ->
-				return template.find('.input-message')
-		}
-
 	maxMessageLength: ->
 		return RocketChat.settings.get('Message_MaxAllowedSize')
-
-	utc: ->
-		if @utcOffset?
-			return "UTC #{@utcOffset}"
-
-	phoneNumber: ->
-		return '' unless @phoneNumber
-		if @phoneNumber.length > 10
-			return "(#{@phoneNumber.substr(0,2)}) #{@phoneNumber.substr(2,5)}-#{@phoneNumber.substr(7)}"
-		else
-			return "(#{@phoneNumber.substr(0,2)}) #{@phoneNumber.substr(2,4)}-#{@phoneNumber.substr(6)}"
-
-	lastLogin: ->
-		if @lastLogin
-			return moment(@lastLogin).format('LLL')
-
-	canJoin: ->
-		return !! ChatRoom.findOne { _id: @_id, t: 'c' }
-
-	canRecordAudio: ->
-		wavRegex = /audio\/wav|audio\/\*/i
-		wavEnabled = !RocketChat.settings.get("FileUpload_MediaTypeWhiteList") || RocketChat.settings.get("FileUpload_MediaTypeWhiteList").match(wavRegex)
-		return RocketChat.settings.get('Message_AudioRecorderEnabled') and (navigator.getUserMedia? or navigator.webkitGetUserMedia?) and wavEnabled and RocketChat.settings.get('FileUpload_Enabled')
 
 	unreadData: ->
 		data =
@@ -346,7 +255,9 @@ Template.room.events
 	'click .toggle-favorite': (event) ->
 		event.stopPropagation()
 		event.preventDefault()
-		Meteor.call 'toggleFavorite', @_id, !$('i', event.currentTarget).hasClass('favorite-room')
+		Meteor.call 'toggleFavorite', @_id, !$('i', event.currentTarget).hasClass('favorite-room'), (err) ->
+			if err
+				return handleError(err)
 
 	'click .edit-room-title': (event) ->
 		event.preventDefault()
@@ -501,7 +412,7 @@ Template.room.onCreated ->
 	# this.scrollOnBottom = true
 	# this.typing = new msgTyping this.data._id
 	this.showUsersOffline = new ReactiveVar false
-	this.atBottom = if FlowRouter.getQueryParam('j') then false else true
+	this.atBottom = if FlowRouter.getQueryParam('msg') then false else true
 	this.unreadCount = new ReactiveVar 0
 
 	this.selectable = new ReactiveVar false
@@ -553,7 +464,7 @@ Template.room.onCreated ->
 
 	Meteor.call 'getRoomRoles', @data._id, (error, results) ->
 		if error
-			return toastr.error error.reason
+			return handleError(error)
 
 		for record in results
 			delete record._id

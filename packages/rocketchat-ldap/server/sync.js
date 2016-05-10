@@ -88,6 +88,17 @@ getDataToSyncUserData = function getDataToSyncUserData(ldapUser, user) {
 						userData.name = ldapUser.object[ldapField];
 					}
 					break;
+
+				case 'phone':
+					if (user.phone !== ldapUser.object[ldapField]) {
+						userData.phone = ldapUser.object[ldapField];
+					}
+					break;
+				case 'dept':
+					if (user.dept !== ldapUser.object[ldapField]) {
+						userData.dept = ldapUser.object[ldapField];
+					}
+					break;
 			}
 		});
 

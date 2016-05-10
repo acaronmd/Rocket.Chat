@@ -1,4 +1,4 @@
-<template name="inOutBoard">
+<template name="userPresence">
 	<section class="page-container page-list">
 		<header class="fixed-title">
 			{{> burger}}
@@ -22,9 +22,10 @@
 					<thead>
 						<tr>
 							<th>&nbsp;</th>
-							<th width="34%">{{_ "Name"}}</th>
-							<th width="33%">{{_ "Message"}}</th>
-							<th width="33%">{{_ "E-mail"}}</th>
+							<th>{{_ "Name"}}</th>
+							<th>{{_ "Message"}}</th>
+							<th>{{_ "Phone"}}</th>
+							<th>{{_ "Dept"}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -37,7 +38,8 @@
 							</td>
 							<td>{{name}}</td>
 							<td>{{statusMessage}}</td>
-							<td>{{emailAddress}}</td>
+							<td>{{phone}}</td>
+							<td>{{dept}}</td>
 						</tr>
 						{{/each}}
 					</tbody>

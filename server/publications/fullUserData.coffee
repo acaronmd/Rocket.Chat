@@ -5,16 +5,17 @@ Meteor.publish 'fullUserData', (filter, limit) ->
 	fields =
 		name: 1
 		username: 1
+		dept: 1
+		phone: 1
 		status: 1
+		statusMessage: 1
 		utcOffset: 1
 		type: 1
 
 	if RocketChat.authz.hasPermission( @userId, 'view-full-other-user-info') is true
 		fields = _.extend fields,
 			emails: 1
-			phone: 1
 			statusConnection: 1
-			statusMessage: 1
 			createdAt: 1
 			lastLogin: 1
 			active: 1

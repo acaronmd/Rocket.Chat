@@ -1,4 +1,4 @@
-Template.inOutBoard.helpers
+Template.userPresence.helpers
 	isReady: ->
 		return Template.instance().ready?.get()
 	users: ->
@@ -14,7 +14,7 @@ Template.inOutBoard.helpers
 	emailAddress: ->
 		return _.map(@emails, (e) -> e.address).join(', ')
 
-Template.inOutBoard.onCreated ->
+Template.userPresence.onCreated ->
 	instance = @
 	@limit = new ReactiveVar 50
 	@filter = new ReactiveVar ''
@@ -25,7 +25,7 @@ Template.inOutBoard.onCreated ->
 		id: 'user-info',
 		i18nTitle: 'User_Info',
 		icon: 'icon-user',
-		template: 'adminUserInfo',
+		template: 'userInfo',
 		order: 1
 	})
 
@@ -44,11 +44,11 @@ Template.inOutBoard.onCreated ->
 			query = {}
 
 		query.type =
-			$in: ['user', 'bot']
+			$in: ['user']
 
 		return Meteor.users.find(query, { limit: instance.limit?.get(), sort: { username: 1, name: 1 } }).fetch()
 
-Template.inOutBoard.events
+Template.userPresence.events
 	'keydown #users-filter': (e) ->
 		if e.which is 13
 			e.stopPropagation()
@@ -67,7 +67,7 @@ Template.inOutBoard.events
 
 	'click .user-info': (e) ->
 		e.preventDefault()
-		RocketChat.TabBar.setTemplate 'adminUserInfo'
+		RocketChat.TabBar.setTemplate 'userInfo'
 		RocketChat.TabBar.setData Meteor.users.findOne @_id
 		RocketChat.TabBar.openFlex()
 		RocketChat.TabBar.showGroup 'users-selected'

@@ -37,7 +37,7 @@ Meteor.startup(function() {
 		this.add('LDAP_Unique_Identifier_Field', 'objectGUID,ibm-entryUUID,GUID,dominoUNID,nsuniqueId,uidNumber', { type: 'string', enableQuery: enableQuery });
 		this.add('LDAP_Sync_User_Data', false, { type: 'boolean', enableQuery: enableQuery });
 		this.add('LDAP_Sync_User_Avatar', true, { type: 'boolean', enableQuery: syncDataQuery });
-		this.add('LDAP_Sync_User_Data_FieldMap', '{"cn":"name", "mail":"email"}', { type: 'string', enableQuery: syncDataQuery });
+		this.add('LDAP_Sync_User_Data_FieldMap', '{"cn":"name", "mail":"email", "telephoneNumber":"phone", "department":"dept"}', { type: 'string', enableQuery: syncDataQuery });
 		this.add('LDAP_Default_Domain', '', { type: 'string', enableQuery: enableQuery });
 		this.add('LDAP_Test_Connection', 'ldap_test_connection', { type: 'action', actionText: 'Test_Connection' });
 		this.add('LDAP_Sync_Users', 'ldap_sync_users', { type: 'action', actionText: 'Sync_Users' });
